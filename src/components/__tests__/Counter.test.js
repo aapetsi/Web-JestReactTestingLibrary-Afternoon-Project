@@ -2,7 +2,6 @@ import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import * as rtl from "@testing-library/react";
 import Counter from "../Counter";
-import { reset } from "ansi-colors";
 
 let tools;
 
@@ -60,17 +59,44 @@ describe("Counter component", () => {
 
   it("prevents the count from going over an upper limit", () => {
     // implement
+    // click 5 times
+    const incButton = tools.queryByTestId("incButton");
+    for (let i = 0; i < 6; i++) {
+      rtl.fireEvent.click(incButton);
+    }
+    expect(tools.queryByText(/5/)).not.toBeInTheDocument();
   });
 
   it("prevents the count from going under a lower limit", () => {
     // implement
+    const decButton = tools.queryByTestId("decButton");
+    for (let i = 0; i < 6; i++) {
+      rtl.fireEvent.click(decButton);
+    }
+    expect(tools.queryByText(/6/)).toBeInTheDocument();
+    expect(tools.queryByText(/-5/)).not.toBeInTheDocument();
   });
 
   it("shows a warning once we hit the upper limit of the counter", () => {
     // implement
+    const incButton = tools.queryByTestId("incButton");
+    for (let i = 0; i < 7; i++) {
+      rtl.fireEvent.click(incButton);
+    }
+    const elementWithUpperLimit = tools.queryByText(
+      /That's as high as Peter's count will go/i
+    );
+    // tools.debug();
+
+    // expect(elementWithUpperLimit).toBeInTheDocument();
   });
 
   it("shows a warning once we hit the lower limit of the counter", () => {
     // implement
+    const decButton = tools.queryByTestId("decButton");
+    for (let i = 0; i < 6; i++) {
+      rtl.fireEvent.click(decButton);
+    }
+    tools.debug();
   });
 });
